@@ -27,3 +27,13 @@ class Book:
             self.transactions.append(Transaction(Transaction.SELL, copies))
             return True
 
+    def supply(self, copies: int):
+        self.quantity += copies
+        self.transactions.append(Transaction(Transaction.SUPPLY, copies))
+
+    def copies_sold(self)-> int:
+        total_sold = sum(transaction.copies for transaction in self.transactions if transaction.type == Transaction.SELL)
+        return total_sold
+
+    def __str__(self) -> str:
+        return f"ISBN: {self.isbn}\nTitle: {self.title}\nSale Price: {self.sale_price}\nPurchase Price: {self.purchase_price}\nQuantity: {self.quantity}"
