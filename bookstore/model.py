@@ -37,3 +37,42 @@ class Book:
 
     def __str__(self) -> str:
         return f"ISBN: {self.isbn}\nTitle: {self.title}\nSale Price: {self.sale_price}\nPurchase Price: {self.purchase_price}\nQuantity: {self.quantity}"
+
+class Bookstore:
+    def __init__(self):
+        self.catalog: dict[str, Book] = {}
+
+    def add_book(self, isbn: str, title: str, sale_price: float, purchase_price: float, quantity: int):
+        if isbn not in self.catalog:
+            new_book = Book(isbn, title,  sale_price, purchase_price, quantity)
+            self.catalog[isbn] = new_book
+
+    def delete_book(self, isbn: str):
+        if isbn in self.catalog:
+            del self.catalog[isbn]
+
+    def search_by_isbn(self, isbn: str)-> Book|None:
+        return self.catalog.get(isbn)
+    def sell_book(self, isbn: str, copies: int) -> bool:
+        book = self.search_by_isbn(isbn)
+        if book is None:
+            return False
+        return book.sell(copies)
+    def supply_book(self, isbn: str, copies: int) -> bool:
+        book = self.search_by_isbn(isbn)
+        if book is None:
+            return False
+        book.supply(copies)
+        return True
+
+    def best_selling_book(self)-> Book|None:
+        max_copies_sold = 0
+        best_book = None
+        if len(self.catalog) <= 0:
+            return None
+        for book in self.catalog.values():
+            copies_sold = book.copies_sold()
+            if copies_sold > max_copies_sold:
+                max_copies_sold = copies_sold
+                best_book = book
+        return best_book
